@@ -3,7 +3,10 @@ WORKDIR /src
 COPY . .
 RUN cargo build --release --locked -p relay
 FROM debian:bookworm-slim
-RUN useradd --system --uid 10001 relay
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends ca-certificates \
+    && apt-get clean \
+    && useradd --system --uid 10001 relay
 COPY --from=build /src/target/release/relay /usr/local/bin/relay
 USER relay
 EXPOSE 8081

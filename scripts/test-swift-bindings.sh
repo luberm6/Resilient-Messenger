@@ -13,6 +13,7 @@ uniffi-bindgen generate \
   --out-dir "$generated"
 swiftc \
   -I "$generated" \
+  -Xcc "-fmodule-map-file=$generated/messenger_uniffiFFI.modulemap" \
   -L "$root/target/debug" \
   -Xlinker -rpath -Xlinker "$root/target/debug" \
   -lmessenger_uniffi \

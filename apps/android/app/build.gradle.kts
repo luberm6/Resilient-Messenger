@@ -20,7 +20,7 @@ android {
 
 dependencies {
     // 2026.08.00 requires the API 37 preview SDK; stay on the latest API 36-compatible stable BOM.
-    implementation(platform("androidx.compose:compose-bom:2026.07.00"))
+    implementation(platform("androidx.compose:compose-bom:2026.06.01"))
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.ui:ui")
