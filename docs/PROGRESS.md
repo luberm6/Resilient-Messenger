@@ -31,3 +31,14 @@ Added client-side Ed25519 root/device key generation, root-signed device certifi
 - Username claiming/changing/release cooldown, reserved-name policy, race-safe transactions, rate limiting and anti-enumeration responses.
 - Access/refresh session implementation, device-bound challenge response and refresh-token reuse detection.
 - QR serialization, CLI harness, all requested security/integration tests, Rust compilation and CI execution.
+
+## p05 — OpenMLS CryptoEngine gate
+
+No CryptoEngine has been integrated. This is intentional: the current environment lacks cargo/rustc, Xcode/Swift build tools and Android Gradle/NDK, so it cannot verify the exact stable OpenMLS release/changelog/advisories, resolve and commit Cargo.lock, run MLS interoperability tests, or prove real mobile bindings. No mock or substitute ratchet was added.
+
+### Still missing after p05
+
+- Verified stable OpenMLS selection and ADR, exact locked transitive dependency graph, and cargo-deny review.
+- Real OpenMLS CryptoEngine with encrypted local storage, credential validation against root-signed device certificates, and lifecycle APIs.
+- UniFFI-generated Swift/Kotlin bindings, XCFramework/AAR pipelines, real-device gates and all MLS interoperability/load/size measurements.
+- Independent external security audit before any mass launch.
