@@ -2,7 +2,7 @@ plugins { id("com.android.library") }
 
 android {
     namespace = "org.resilient.messenger.core"
-    compileSdk = 37
+    compileSdk = 36
     defaultConfig { minSdk = 26 }
 }
 

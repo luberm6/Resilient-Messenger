@@ -17,3 +17,6 @@ path = "fuzz_targets/decode.rs"
 test = false
 doc = false
 bench = false
+
+# cargo-fuzz is intentionally isolated from the production workspace.
+[workspace]
