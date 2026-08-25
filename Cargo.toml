@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+exclude = ["crates/messenger-protocol/fuzz"]
+members = ["crates/messenger-protocol", "crates/messenger-crypto", "crates/messenger-identity", "crates/messenger-core", "crates/messenger-transport", "crates/messenger-uniffi", "services/core-api", "services/relay", "tools/network-lab", "tools/load-generator"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+license = "Apache-2.0 OR MIT"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"

@@ -1,0 +1,8 @@
+/target/
+/crates/messenger-protocol/fuzz/target/
+/.toolchain/
+/.env
+/.DS_Store
+/.idea/
+*.xcuserstate
+local.properties

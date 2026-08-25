@@ -1,0 +1,3 @@
+# Cargo.lock package name `libcrux-secrets` followed by its registry checksum.
+# This suppresses only the reviewed finding from the recovery commit.
+af94d3d670758b2cf57369b3348f4e815d6b4fcc:Cargo.lock:generic-api-key:1876
