@@ -36,11 +36,22 @@ Implemented encrypted SQLite migrations and local source of truth for account/de
 
 ## Verification executed in this workspace
 
-- Rust 1.98.0: `cargo fmt`, `cargo check`, workspace clippy and workspace tests.
+- Rust 1.98.0: `cargo fmt`, `cargo check`, workspace clippy, workspace tests and all-targets build.
 - Real OpenMLS and UniFFI host tests, protocol property tests and real local WebSocket/HTTPS failover tests.
 - Protocol and crypto size-report generators.
-- `cargo deny check` including advisories, bans, licenses and sources.
+- `cargo deny check` including advisories, bans, licenses and sources, plus `cargo audit`.
 - Shell syntax, required-path inspection and local secret scan.
+
+GitHub Actions run [#9](https://github.com/luberm6/Resilient-Messenger/actions/runs/32834174797) completed successfully on 2026-08-25. Its nine green jobs verified:
+
+- Rust format, clippy, 32 workspace tests, build and size reports;
+- clean PostgreSQL integration and controlled migrations;
+- cargo-deny and cargo-audit dependency policy;
+- 30 seconds of libFuzzer execution;
+- Swift package tests, SwiftLint, real Rust/OpenMLS calls through generated Swift UniFFI bindings and XCFramework creation;
+- generated Kotlin binding execution, Android unit tests/lint/app build and multi-ABI AAR creation;
+- Docker Compose validation, image build, migration job, readiness and PostgreSQL restart recovery;
+- full-history Gitleaks plus the repository-local secret scan.
 
 The exact final command results for the current commit are recorded in the completion report; this section must be corrected if a later edit invalidates a run.
 
@@ -48,11 +59,8 @@ The exact final command results for the current commit are recorded in the compl
 
 These are not silently treated as complete:
 
-- GitHub Actions for the recovery commit has not yet completed. Until it does, CI is not called green.
-- This container has no Docker daemon or PostgreSQL server, so clean-database integration, Compose validation/start/restart and retention under a real database must be confirmed by GitHub Actions.
-- This container has no Xcode/Swift toolchain, Android SDK/NDK or Gradle executable. Generated Swift/Kotlin runtime calls, XCFramework, AAR, SwiftLint and Android lint/build must be confirmed by their CI jobs and later on physical devices.
-- The 30-second libFuzzer job is a CI gate; local proptest and deterministic random-corpus tests are not represented as a substitute.
 - Real 1 Kbit/s, DNS/TLS fault injection, failover latency, battery/probe frequency and mobile memory/CPU measurements require the network lab plus physical/simulator platform environment. Unit tests prove semantics, not those environmental numbers.
+- XCFramework and AAR build gates are green, but runtime behavior, secure-key storage and resource measurements still require real iOS and Android devices.
 - OpenMLS and the surrounding identity/storage/protocol/mobile integration require an independent external security audit before mass launch.
 - RUSTSEC-2026-0173 is an unmaintained build-time transitive dependency with no patched release; `deny.toml` contains the documented temporary exception.
 - Push-notification provider integration and user-facing RU/EN screens are outside p01–p08 and remain for later prompts; no placeholder implementation was added.
