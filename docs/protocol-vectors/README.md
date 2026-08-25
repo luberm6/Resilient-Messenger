@@ -1,3 +1,9 @@
 # v1 golden vectors
 
-`v1-ping.hex` is the canonical encoding of `[schema=1, version=1, Ping, client_message_id=16×0x07, ttl=0, body=h'']`. Rust decoding is tested. Swift and Kotlin bindings must expose the same byte-level Rust codec through UniFFI; their binding conformance tests are added together with binding generation, not duplicated as platform codecs.
+The fixtures are lowercase hexadecimal encodings of complete canonical values:
+
+- `v1-ping.hex` — backward-compatibility frame fixture;
+- `v1-upload-envelope.hex` — steady transport fixture;
+- `v1-text-message.hex` — encrypted application-envelope fixture with a two-byte test ciphertext.
+
+Rust tests decode and re-encode every fixture byte-for-byte. Swift and Kotlin integration programs call the same Rust codec through generated UniFFI bindings and validate `v1-ping.hex`; those jobs are platform gates in CI.

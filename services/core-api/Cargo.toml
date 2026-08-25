@@ -5,9 +5,18 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 [dependencies]
-axum = { version = "=0.8.1", default-features = false, features = ["http1", "tokio"] }
-tokio = { version = "=1.43.0", features = ["macros", "rt-multi-thread", "signal", "net"] }
-sqlx = { version = "=0.8.3", default-features = false, features = ["runtime-tokio-rustls", "postgres", "migrate"] }
-tracing = "=0.1.41"
-tracing-subscriber = { version = "=0.3.19", features = ["env-filter", "json"] }
+axum = { version = "=0.8.9", default-features = false, features = ["http1", "tokio"] }
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread", "signal", "net", "time"] }
+sqlx = { version = "=0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }
+tracing = "=0.1.44"
+tracing-subscriber = { version = "=0.3.23", features = ["env-filter", "json"] }
 messenger-protocol = { path = "../../crates/messenger-protocol", version = "=0.1.0" }
+messenger-identity = { path = "../../crates/messenger-identity", version = "=0.1.0" }
+ed25519-dalek = "=2.1.1"
+rand_core = { version = "=0.6.4", features = ["getrandom"] }
+sha2 = "=0.10.8"
+thiserror = "=2.0.12"
+tower-http = { version = "=0.7.0", features = ["request-id", "trace", "catch-panic"] }
+
+[dev-dependencies]
+messenger-identity = { path = "../../crates/messenger-identity", version = "=0.1.0" }

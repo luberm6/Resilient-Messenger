@@ -1,44 +1,60 @@
-# Progress
+# Progress and gap register
 
-## p01 — project foundation
+Last updated: 2026-08-25. This file is cumulative and must be updated after every prompt. “Implemented” means code exists; only the verification section records checks that actually ran.
 
-Structure, documentation, CI and minimal Rust services are established. No user-facing messenger function is implemented. Local environment does not provide the Rust/Docker/Apple/Android toolchains, so only checks recorded as executed may be claimed as passed.
+## p01 — foundation
 
-Executed: shell syntax check and repository policy/path inspection. Not executed: cargo fmt/clippy/test/build, cargo-deny, Docker Compose validation, SwiftLint and Detekt (their toolchains are unavailable locally). GitHub Actions is the authoritative clean-room CI runner for these checks.
+Implemented the Rust monorepo, iOS/Android shells, PostgreSQL/SQLite boundaries, Docker Compose, Render-compatible images, pinned toolchain/lockfile, development commands, CI, dependency/license policy, secret scanning and required governance/security documents. Scope explicitly excludes hardware, LoRa, mesh, taxi relays, rescue/satellite links, calls, video, voice, media/files, public channels, stories, bots, payments, web messenger and federation.
 
 ## p02 — compact binary protocol
 
-Implemented v1 deterministic canonical-CBOR profile, fixed compact IDs, 17 transport tags, 11 encrypted application tags, strict size/format validation, malformed/truncated/oversized/map rejection tests and deterministic fuzz corpus. Golden vector and size-report source are present. Native Swift/Kotlin conformance uses the future generated UniFFI binding to this one Rust codec; platform toolchains have not yet been installed or run.
+Implemented deterministic strict canonical CBOR v1 with 17 transport frame types, 11 encrypted application types, compact identifiers, limits/TTL/version/error rules, canonical golden vectors, malformed/truncated/oversized/noncanonical/map rejection, proptest/random corpus and byte reports. JSON is absent from the wire path. Swift/Kotlin integration tests call the generated Rust codec.
 
 ## p03 — backend foundation
 
-Added core-api process configuration, JSON structured logging without payload logging, liveness/readiness/metrics endpoints, graceful shutdown, bounded CBOR sync endpoint, SQLx pool and controlled migration mode. PostgreSQL migration defines the initial ciphertext-only schema and idempotency key for group events.
-
-### Still missing after p03
-
-- Challenge-response signature verification, short access tokens and rotating hashed refresh tokens.
-- Transactional upload/cursor/receipt implementation and the requested PostgreSQL integration tests.
-- Request IDs, durable distributed rate limiting, LISTEN/NOTIFY and real OpenAPI bootstrap/auth endpoints.
-- Actual Rust/Docker/CI execution and dependency lockfile refresh after adding backend dependencies.
+Implemented Axum/Tokio/SQLx/PostgreSQL configuration, JSON structured metadata logging, request IDs, distinct health/readiness, metrics, body/rate limits, graceful shutdown, controlled migrations and transaction boundaries. The schema includes all requested tables and documented indexes. Challenge-response, short access sessions, hashed rotating refresh families and reuse revocation are implemented. PostgreSQL integration covers replay, expiry, invalid signatures, rotation, rollback, idempotent event upload and cursors.
 
 ## p04 — anonymous identity and recovery
 
-Added client-side Ed25519 root/device key generation, root-signed device certificate, stable one-way Account ID, BIP-39 24-word recovery phrase, HKDF-derived XChaCha20-Poly1305 recovery blob encryption, normalized exact username primitive, and signed invite verification.
+Implemented locally generated Ed25519 Account Root/Device keys, root-signed Device Certificates, stable account ID, BIP-39 24-word recovery, HKDF/XChaCha encrypted server blob, clean-device identity restore, exact normalized/reserved/cooldown username operations, signed invite/QR verification and a CLI harness. Backend never receives the phrase or root private key; history is not restored automatically.
 
-### Still missing after p04
+## p05 — OpenMLS CryptoEngine
 
-- Backend registration, certificate persistence/verification, recovery-blob endpoint and client restore harness.
-- Username claiming/changing/release cooldown, reserved-name policy, race-safe transactions, rate limiting and anti-enumeration responses.
-- Access/refresh session implementation, device-bound challenge response and refresh-token reuse detection.
-- QR serialization, CLI harness, all requested security/integration tests, Rust compilation and CI execution.
+Implemented real OpenMLS 0.9.0 with exact locked dependencies, X25519/ChaCha20-Poly1305/SHA-256/Ed25519, credential binding, encrypted state snapshots and the full group lifecycle API. No custom ratchet, libsignal or key-material debug feature is present. UniFFI provides pointer-free, Mutex-protected Swift/Kotlin APIs; XCFramework and AAR pipelines plus real language-call tests are CI gates. Rust covers 1:1, 10/100 members, add/remove, replay/out-of-order/loss and restart persistence. Independent external audit remains mandatory.
 
-## p05 — OpenMLS CryptoEngine gate
+## p06 — encrypted delivery service
 
-No CryptoEngine has been integrated. This is intentional: the current environment lacks cargo/rustc, Xcode/Swift build tools and Android Gradle/NDK, so it cannot verify the exact stable OpenMLS release/changelog/advisories, resolve and commit Cargo.lock, run MLS interoperability tests, or prove real mobile bindings. No mock or substitute ratchet was added.
+Implemented one-row opaque group events, per-device group/global cursors, KeyPackage consume-once flow, Welcome mailbox, signed membership operations correlated with MLS commits, access control, idempotent uploads/receipts, TTL cleanup, paging and reconnect sync. `LISTEN/NOTIFY` wakes long-poll across instances but tables remain durable authority. WebSocket SyncRequest and HTTPS long-poll use the same cursor query path.
 
-### Still missing after p05
+## p07 — transports and relay failover
 
-- Verified stable OpenMLS selection and ADR, exact locked transitive dependency graph, and cargo-deny review.
-- Real OpenMLS CryptoEngine with encrypted local storage, credential validation against root-signed device certificates, and lifecycle APIs.
-- UniFFI-generated Swift/Kotlin bindings, XCFramework/AAR pipelines, real-device gates and all MLS interoperability/load/size measurements.
-- Independent external security audit before any mass launch.
+Implemented real WebSocket and HTTPS-CBOR senders, signed deterministic relay directories with offline signer/verifier CLI, bootstrap/cached anti-rollback validation, health/backoff/jitter/sticky failover, persistent deduplicated outbox and byte/retry/switch counters. Relay is stateless, payload-opaque, frame-limited and forwards over configurable core HTTPS. Network tests cover Relay A failure, Relay B fallback, invalid/expired directories and both real local transports.
+
+## p08 — offline-first local core
+
+Implemented encrypted SQLite migrations and local source of truth for account/device/conversations/messages/outbox/inbox/cursors/receipts/requests/blocks/network/directory/retry/tombstone/key state. Send persists encrypted message plus outbox atomically before network. Tests cover kill-after-send/restart, wrong key, corruption, duplicate input/acceptance, migration, key rotation, 10,000 messages, long offline state and concurrent UI/network access. UniFFI exposes the requested state APIs; UI has no direct SQLite write path.
+
+## Verification executed in this workspace
+
+- Rust 1.98.0: `cargo fmt`, `cargo check`, workspace clippy and workspace tests.
+- Real OpenMLS and UniFFI host tests, protocol property tests and real local WebSocket/HTTPS failover tests.
+- Protocol and crypto size-report generators.
+- `cargo deny check` including advisories, bans, licenses and sources.
+- Shell syntax, required-path inspection and local secret scan.
+
+The exact final command results for the current commit are recorded in the completion report; this section must be corrected if a later edit invalidates a run.
+
+## Open gaps after p08
+
+These are not silently treated as complete:
+
+- GitHub Actions for the recovery commit has not yet completed. Until it does, CI is not called green.
+- This container has no Docker daemon or PostgreSQL server, so clean-database integration, Compose validation/start/restart and retention under a real database must be confirmed by GitHub Actions.
+- This container has no Xcode/Swift toolchain, Android SDK/NDK or Gradle executable. Generated Swift/Kotlin runtime calls, XCFramework, AAR, SwiftLint and Android lint/build must be confirmed by their CI jobs and later on physical devices.
+- The 30-second libFuzzer job is a CI gate; local proptest and deterministic random-corpus tests are not represented as a substitute.
+- Real 1 Kbit/s, DNS/TLS fault injection, failover latency, battery/probe frequency and mobile memory/CPU measurements require the network lab plus physical/simulator platform environment. Unit tests prove semantics, not those environmental numbers.
+- OpenMLS and the surrounding identity/storage/protocol/mobile integration require an independent external security audit before mass launch.
+- RUSTSEC-2026-0173 is an unmaintained build-time transitive dependency with no patched release; `deny.toml` contains the documented temporary exception.
+- Push-notification provider integration and user-facing RU/EN screens are outside p01–p08 and remain for later prompts; no placeholder implementation was added.
+
+No excluded MVP feature has been added, even as a partial scaffold.

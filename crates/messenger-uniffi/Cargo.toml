@@ -1,0 +1,17 @@
+[package]
+name = "messenger-uniffi"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+messenger-core = { path = "../messenger-core", version = "=0.1.0" }
+messenger-crypto = { path = "../messenger-crypto", version = "=0.1.0" }
+messenger-identity = { path = "../messenger-identity", version = "=0.1.0" }
+messenger-protocol = { path = "../messenger-protocol", version = "=0.1.0" }
+thiserror = "=2.0.12"
+uniffi = "=0.32.0"

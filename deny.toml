@@ -1,0 +1,22 @@
+[licenses]
+allow = [
+  "Apache-2.0",
+  "MIT",
+  "MIT-0",
+  "BSD-3-Clause",
+  "Unicode-3.0",
+  "ISC",
+  "CC0-1.0",
+  "Zlib",
+  "MPL-2.0",
+  "CDLA-Permissive-2.0",
+]
+confidence-threshold = 0.8
+[advisories]
+ignore = [
+  # Build-time transitive dependency of hax/libcrux; upstream reports no safe
+  # replacement. Re-evaluate on every OpenMLS update.
+  "RUSTSEC-2026-0173",
+]
+[bans]
+multiple-versions = "warn"

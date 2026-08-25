@@ -1,0 +1,7 @@
+/target/
+/.toolchain/
+/.env
+/.DS_Store
+/.idea/
+*.xcuserstate
+local.properties

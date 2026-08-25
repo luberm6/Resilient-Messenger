@@ -3,3 +3,21 @@ info: { title: Resilient Messenger bootstrap API, version: 0.1.0 }
 paths:
   /healthz: { get: { responses: { '200': { description: Alive } } } }
   /readyz: { get: { responses: { '200': { description: Ready }, '503': { description: Not ready } } } }
+  /metrics: { get: { responses: { '200': { description: Payload-free service counters } } } }
+  /v1/sync:
+    post:
+      description: Canonical CBOR transport frame; schema is defined by messenger-protocol, not OpenAPI.
+      requestBody:
+        required: true
+        content: { application/cbor: { schema: { type: string, contentEncoding: binary } } }
+      responses:
+        '200': { description: Canonical CBOR transport frame }
+        '400': { description: Canonical CBOR Error frame }
+  /v1/long-poll:
+    post:
+      description: Cursor SyncRequest with up to a 20-second PostgreSQL-backed wait.
+      requestBody:
+        required: true
+        content: { application/cbor: { schema: { type: string, contentEncoding: binary } } }
+      responses:
+        '200': { description: Canonical CBOR SyncBatch }
