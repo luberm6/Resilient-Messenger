@@ -1,0 +1,5 @@
+openapi: 3.1.0
+info: { title: Resilient Messenger bootstrap API, version: 0.1.0 }
+paths:
+  /healthz: { get: { responses: { '200': { description: Alive } } } }
+  /readyz: { get: { responses: { '200': { description: Ready }, '503': { description: Not ready } } } }

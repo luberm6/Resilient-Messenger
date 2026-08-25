@@ -10,14 +10,13 @@ Executed: shell syntax check and repository policy/path inspection. Not executed
 
 Implemented v1 deterministic canonical-CBOR profile, fixed compact IDs, 17 transport tags, 11 encrypted application tags, strict size/format validation, malformed/truncated/oversized/map rejection tests and deterministic fuzz corpus. Golden vector and size-report source are present. Native Swift/Kotlin conformance uses the future generated UniFFI binding to this one Rust codec; platform toolchains have not yet been installed or run.
 
-## Gap register — update after every prompt
+## p03 — backend foundation
 
-### Still missing after p02
+Added core-api process configuration, JSON structured logging without payload logging, liveness/readiness/metrics endpoints, graceful shutdown, bounded CBOR sync endpoint, SQLx pool and controlled migration mode. PostgreSQL migration defines the initial ciphertext-only schema and idempotency key for group events.
 
-- Actual Rust compilation, rustfmt, clippy, unit/property/fuzz execution, size-report execution, cargo-deny and Docker validation.
-- Confirmed GitHub Actions result; no workflow run has been observed yet.
-- UniFFI binding generation and byte-for-byte conformance tests on real Swift and Kotlin clients.
-- E2EE/MLS integration, key lifecycle, encrypted local persistence and server delivery implementation.
-- Relay/API behavior, authentication, registration, username/QR/invite flows, push, offline queue, reconnect/failover, network-mode behavior, RU/EN interfaces and 1 Kbit/s acceptance tests.
+### Still missing after p03
 
-This register is deliberately not a roadmap: an item leaves it only after it is implemented and a real relevant test or verification is recorded.
+- Challenge-response signature verification, short access tokens and rotating hashed refresh tokens.
+- Transactional upload/cursor/receipt implementation and the requested PostgreSQL integration tests.
+- Request IDs, durable distributed rate limiting, LISTEN/NOTIFY and real OpenAPI bootstrap/auth endpoints.
+- Actual Rust/Docker/CI execution and dependency lockfile refresh after adding backend dependencies.

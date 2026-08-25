@@ -1,0 +1,11 @@
+#![forbid(unsafe_code)]
+use std::{net::SocketAddr, time::Duration};
+use axum::{body::Bytes, extract::State, http::{header, HeaderValue}, response::{IntoResponse, Response}, routing::{get,post}, Router};
+use messenger_protocol::TransportFrame;
+use sqlx::{postgres::PgPoolOptions,PgPool};
+use tracing::{error,info};
+#[derive(Clone)]struct App{db:PgPool}
+#[tokio::main]async fn main(){tracing_subscriber::fmt().json().init();let url=std::env::var("DATABASE_URL").unwrap_or_else(|_|{error!("DATABASE_URL missing");std::process::exit(2)});let db=PgPoolOptions::new().max_connections(10).acquire_timeout(Duration::from_secs(5)).connect_lazy(&url).expect("database url");if std::env::args().nth(1).as_deref()==Some("migrate"){sqlx::migrate!().run(&db).await.expect("migration failed");return}let app=Router::new().route("/healthz",get(||async{axum::http::StatusCode::OK})).route("/readyz",get(readyz)).route("/metrics",get(||async{"resilient_api_up 1\n"})).route("/v1/sync",post(sync)).layer(axum::extract::DefaultBodyLimit::max(64*1024)).with_state(App{db});let addr:SocketAddr=std::env::var("BIND_ADDR").unwrap_or_else(|_|"0.0.0.0:8080".into()).parse().expect("bind address");let l=tokio::net::TcpListener::bind(addr).await.expect("bind");info!(%addr,"core api started");axum::serve(l,app).with_graceful_shutdown(async{let _=tokio::signal::ctrl_c().await}).await.expect("server")}
+async fn readyz(State(a):State<App>)->Response{match sqlx::query("SELECT 1").execute(&a.db).await{Ok(_)=>axum::http::StatusCode::OK.into_response(),Err(_)=>error_response(axum::http::StatusCode::SERVICE_UNAVAILABLE,"not_ready")}}
+async fn sync(body:Bytes)->Response{match TransportFrame::decode(&body){Ok(frame)=>{info!(kind=?frame.kind,body_bytes=body.len(),"cbor_frame");let mut r=Response::new(axum::body::Body::from(frame.encode().unwrap_or_default()));r.headers_mut().insert(header::CONTENT_TYPE,HeaderValue::from_static("application/cbor"));r},Err(_)=>error_response(axum::http::StatusCode::BAD_REQUEST,"invalid_cbor_frame")}}
+fn error_response(s:axum::http::StatusCode,c:&str)->Response{let mut r=Response::new(axum::body::Body::from(format!("{{\"error\":\"{c}\"}}")));*r.status_mut()=s;r.headers_mut().insert(header::CONTENT_TYPE,HeaderValue::from_static("application/json"));r}

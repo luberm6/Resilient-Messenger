@@ -1,0 +1,13 @@
+[package]
+name = "core-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+[dependencies]
+axum = { version = "=0.8.1", default-features = false, features = ["http1", "tokio"] }
+tokio = { version = "=1.43.0", features = ["macros", "rt-multi-thread", "signal", "net"] }
+sqlx = { version = "=0.8.3", default-features = false, features = ["runtime-tokio-rustls", "postgres", "migrate"] }
+tracing = "=0.1.41"
+tracing-subscriber = { version = "=0.3.19", features = ["env-filter", "json"] }
+messenger-protocol = { path = "../../crates/messenger-protocol", version = "=0.1.0" }

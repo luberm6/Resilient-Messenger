@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-resilient}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-local-only}
+      POSTGRES_DB: ${POSTGRES_DB:-resilient}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  migrate:
+    build:
+      context: ../..
+      dockerfile: services/core-api/Dockerfile
+    command: ["core-api", "migrate"]
+    environment: { DATABASE_URL: postgres://resilient:change-me-local-only@postgres:5432/resilient }
+    depends_on: { postgres: { condition: service_healthy } }
+  core-api:
+    build:
+      context: ../..
+      dockerfile: services/core-api/Dockerfile
+    environment: { DATABASE_URL: postgres://resilient:change-me-local-only@postgres:5432/resilient }
+    ports: ["8080:8080"]
+    depends_on: { migrate: { condition: service_completed_successfully } }
