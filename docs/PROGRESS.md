@@ -20,3 +20,14 @@ Added core-api process configuration, JSON structured logging without payload lo
 - Transactional upload/cursor/receipt implementation and the requested PostgreSQL integration tests.
 - Request IDs, durable distributed rate limiting, LISTEN/NOTIFY and real OpenAPI bootstrap/auth endpoints.
 - Actual Rust/Docker/CI execution and dependency lockfile refresh after adding backend dependencies.
+
+## p04 — anonymous identity and recovery
+
+Added client-side Ed25519 root/device key generation, root-signed device certificate, stable one-way Account ID, BIP-39 24-word recovery phrase, HKDF-derived XChaCha20-Poly1305 recovery blob encryption, normalized exact username primitive, and signed invite verification.
+
+### Still missing after p04
+
+- Backend registration, certificate persistence/verification, recovery-blob endpoint and client restore harness.
+- Username claiming/changing/release cooldown, reserved-name policy, race-safe transactions, rate limiting and anti-enumeration responses.
+- Access/refresh session implementation, device-bound challenge response and refresh-token reuse detection.
+- QR serialization, CLI harness, all requested security/integration tests, Rust compilation and CI execution.
