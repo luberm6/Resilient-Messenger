@@ -1,0 +1,3 @@
+# Architecture
+
+Rust owns shared protocol, identity, cryptographic integration, local SQLite state, Axum API and relay. Clients use UniFFI bindings with SwiftUI and Compose shells. PostgreSQL is server state. The `messenger-protocol` crate owns v1 canonical CBOR codecs: transport frames are a fixed six-element array and encrypted application envelopes a fixed five-element array. Transport exposes only protocol version, type, opaque client message ID, TTL and ciphertext/control bytes; it contains no account profile, contact, title or plaintext data. WebSocket/TLS is primary; HTTPS batch/sync is fallback. Render is deployment-only, never a core dependency.
