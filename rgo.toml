@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = ["crates/messenger-protocol", "crates/messenger-crypto", "crates/messenger-identity", "crates/messenger-core", "services/core-api", "services/relay", "tools/network-lab", "tools/load-generator"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0 OR MIT"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"

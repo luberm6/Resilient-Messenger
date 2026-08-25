@@ -1,0 +1,4 @@
+POSTGRES_USER=resilient
+POSTGRES_PASSWORD=change-me-local-only
+POSTGRES_DB=resilient
+DATABASE_URL=postgres://resilient:change-me-local-only@postgres:5432/resilient
