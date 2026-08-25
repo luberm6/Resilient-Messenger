@@ -7,6 +7,6 @@ let package = Package(
     products: [.library(name: "ResilientMessengerApp", targets: ["ResilientMessengerApp"])],
     targets: [
         .target(name: "ResilientMessengerApp"),
-        .testTarget(name: "ResilientMessengerAppTests", dependencies: ["ResilientMessengerApp"]),
+        .testTarget(name: "ResilientMessengerAppTests", dependencies: ["ResilientMessengerApp"])
     ]
 )

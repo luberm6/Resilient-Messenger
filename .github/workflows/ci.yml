@@ -72,7 +72,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with: { toolchain: nightly-2026-08-20 }
       - run: cargo install --locked cargo-fuzz --version 0.13.2
-      - run: cargo fuzz run decode -- -max_total_time=30
+      - run: cargo +nightly-2026-08-20 fuzz run decode -- -max_total_time=30
         working-directory: crates/messenger-protocol
 
   swift-and-ios-core:

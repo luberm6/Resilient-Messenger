@@ -14,7 +14,7 @@ services:
     build:
       context: ../..
       dockerfile: services/core-api/Dockerfile
-    command: ["core-api", "migrate"]
+    command: ["migrate"]
     environment: { DATABASE_URL: postgres://resilient:change-me-local-only@postgres:5432/resilient }
     depends_on: { postgres: { condition: service_healthy } }
   core-api:
