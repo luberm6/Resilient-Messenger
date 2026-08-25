@@ -7,6 +7,7 @@ for target in aarch64-apple-ios aarch64-apple-ios-sim; do
   cargo build --release --locked -p messenger-uniffi --target "$target"
 done
 command -v xcodebuild >/dev/null
+rm -rf target/ios-bindings target/xcframework/ResilientMessengerCore.xcframework
 mkdir -p target/ios-bindings target/xcframework
 cargo install --locked uniffi --features cli --version 0.32.0
 uniffi-bindgen generate --library target/aarch64-apple-ios/release/libmessenger_uniffi.a --language swift --out-dir target/ios-bindings
