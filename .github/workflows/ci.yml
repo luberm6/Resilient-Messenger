@@ -90,11 +90,13 @@ jobs:
       - run: scripts/test-swift-bindings.sh
       - run: scripts/build-ios-core.sh
       - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
         with:
           name: ios-xcframework
           path: |
             target/xcframework/ResilientMessengerCore.xcframework
             target/ios-bindings/messenger_uniffi.swift
+          retention-days: 7
 
   kotlin-bindings:
     runs-on: ubuntu-latest
@@ -131,9 +133,11 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
       - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
         with:
           name: android-core-aar
           path: apps/android/core/build/outputs/aar/core-release.aar
+          retention-days: 7
 
   docker:
     runs-on: ubuntu-latest
