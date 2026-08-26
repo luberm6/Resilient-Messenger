@@ -89,7 +89,7 @@ jobs:
       - run: swiftlint lint --strict --config .swiftlint.yml
       - run: scripts/test-swift-bindings.sh
       - run: scripts/build-ios-core.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: github.event_name != 'pull_request'
         with:
           name: ios-xcframework
@@ -132,7 +132,7 @@ jobs:
       - run: scripts/build-android-core.sh
         env:
           ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: github.event_name != 'pull_request'
         with:
           name: android-core-aar
